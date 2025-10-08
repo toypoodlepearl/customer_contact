@@ -132,31 +132,94 @@ def initialize_agent_executor():
     
     st.session_state.llm = ChatOpenAI(model_name=ct.MODEL, temperature=ct.TEMPERATURE, streaming=True)
 
-    # 各Tool用のChainを作成
-    st.session_state.customer_doc_chain = utils.create_rag_chain(ct.DB_CUSTOMER_PATH)
-    st.session_state.service_doc_chain = utils.create_rag_chain(ct.DB_SERVICE_PATH)
-    st.session_state.company_doc_chain = utils.create_rag_chain(ct.DB_COMPANY_PATH)
-    st.session_state.rag_chain = utils.create_rag_chain(ct.DB_ALL_PATH)
+    # 各Tool用のChainを作成（エラーハンドリングを追加）
+    try:
+        st.session_state.customer_doc_chain = utils.create_rag_chain(ct.DB_CUSTOMER_PATH)
+        st.session_state.service_doc_chain = utils.create_rag_chain(ct.DB_SERVICE_PATH)
+        st.session_state.company_doc_chain = utils.create_rag_chain(ct.DB_COMPANY_PATH)
+        st.session_state.rag_chain = utils.create_rag_chain(ct.DB_ALL_PATH)
+        logger.info("RAGチェーンの初期化が完了しました")
+    except Exception as e:
+        logger.error(f"RAGチェーンの初期化でエラーが発生しました: {e}")
+        # RAGチェーンが作成できない場合でも、他のツールは使用できるようにする
+        st.session_state.customer_doc_chain = None
+        st.session_state.service_doc_chain = None
+        st.session_state.company_doc_chain = None
+        st.session_state.rag_chain = None
 
     # Agent Executorに渡すTool一覧を用意
     tools = [
         # 会社に関するデータ検索用のTool
         Tool(
             name=ct.SEARCH_COMPANY_INFO_TOOL_NAME,
-            func=utils.run_company_doc_chain,
+            func=utils.run_company_doc_chain_safe,
             description=ct.SEARCH_COMPANY_INFO_TOOL_DESCRIPTION
         ),
         # サービスに関するデータ検索用のTool
         Tool(
             name=ct.SEARCH_SERVICE_INFO_TOOL_NAME,
-            func=utils.run_service_doc_chain,
+            func=utils.run_service_doc_chain_safe,
             description=ct.SEARCH_SERVICE_INFO_TOOL_DESCRIPTION
         ),
         # 顧客とのやり取りに関するデータ検索用のTool
         Tool(
             name=ct.SEARCH_CUSTOMER_COMMUNICATION_INFO_TOOL_NAME,
-            func=utils.run_customer_doc_chain,
+            func=utils.run_customer_doc_chain_safe,
             description=ct.SEARCH_CUSTOMER_COMMUNICATION_INFO_TOOL_DESCRIPTION
+        ),
+        # 計算ツール
+        Tool(
+            name=ct.CALCULATE_TOOL_NAME,
+            func=utils.calculate_tool,
+            description=ct.CALCULATE_TOOL_DESCRIPTION
+        ),
+        # 日時ツール
+        Tool(
+            name=ct.DATE_TIME_TOOL_NAME,
+            func=utils.datetime_tool,
+            description=ct.DATE_TIME_TOOL_DESCRIPTION
+        ),
+        # テキスト分析ツール
+        Tool(
+            name=ct.TEXT_ANALYSIS_TOOL_NAME,
+            func=utils.text_analysis_tool,
+            description=ct.TEXT_ANALYSIS_TOOL_DESCRIPTION
+        ),
+        # FAQ検索ツール
+        Tool(
+            name=ct.FAQ_SEARCH_TOOL_NAME,
+            func=utils.faq_search_tool,
+            description=ct.FAQ_SEARCH_TOOL_DESCRIPTION
+        ),
+        # 連絡先情報ツール
+        Tool(
+            name=ct.CONTACT_INFO_TOOL_NAME,
+            func=utils.contact_info_tool,
+            description=ct.CONTACT_INFO_TOOL_DESCRIPTION
+        ),
+        # 注文状況確認ツール
+        Tool(
+            name=ct.ORDER_STATUS_TOOL_NAME,
+            func=utils.order_status_tool,
+            description=ct.ORDER_STATUS_TOOL_DESCRIPTION
+        ),
+        # 商品情報ツール
+        Tool(
+            name=ct.PRODUCT_INFO_TOOL_NAME,
+            func=utils.product_info_tool,
+            description=ct.PRODUCT_INFO_TOOL_DESCRIPTION
+        ),
+        # 技術サポートツール
+        Tool(
+            name=ct.TECHNICAL_SUPPORT_TOOL_NAME,
+            func=utils.technical_support_tool,
+            description=ct.TECHNICAL_SUPPORT_TOOL_DESCRIPTION
+        ),
+        # プロモーションツール
+        Tool(
+            name=ct.PROMOTION_TOOL_NAME,
+            func=utils.promotion_tool,
+            description=ct.PROMOTION_TOOL_DESCRIPTION
         ),
     ]
     

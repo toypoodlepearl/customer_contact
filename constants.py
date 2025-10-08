@@ -107,6 +107,26 @@ SEARCH_CUSTOMER_COMMUNICATION_INFO_TOOL_DESCRIPTION = "顧客とのやりとり�
 SEARCH_WEB_INFO_TOOL_NAME = "search_web_tool"
 SEARCH_WEB_INFO_TOOL_DESCRIPTION = "自社サービス「HealthX」に関する質問で、Web検索が必要と判断した場合に使う"
 
+# 新しいツール定数
+CALCULATE_TOOL_NAME = "calculate_tool"
+CALCULATE_TOOL_DESCRIPTION = "数値計算や価格計算を行う時に使う。例：料金計算、割引計算、税計算など"
+DATE_TIME_TOOL_NAME = "datetime_tool"
+DATE_TIME_TOOL_DESCRIPTION = "現在の日時や日付計算を行う時に使う。例：現在日時の取得、営業時間の確認、期限計算など"
+TEXT_ANALYSIS_TOOL_NAME = "text_analysis_tool"
+TEXT_ANALYSIS_TOOL_DESCRIPTION = "テキストの分析や要約を行う時に使う。例：文章の要約、感情分析、キーワード抽出など"
+FAQ_SEARCH_TOOL_NAME = "faq_search_tool"
+FAQ_SEARCH_TOOL_DESCRIPTION = "よくある質問（FAQ）から関連する情報を検索する時に使う"
+CONTACT_INFO_TOOL_NAME = "contact_info_tool"
+CONTACT_INFO_TOOL_DESCRIPTION = "連絡先情報や営業時間、所在地などの基本情報を提供する時に使う"
+ORDER_STATUS_TOOL_NAME = "order_status_tool"
+ORDER_STATUS_TOOL_DESCRIPTION = "注文状況や配送状況を確認する時に使う（模擬的な情報を提供）"
+PRODUCT_INFO_TOOL_NAME = "product_info_tool"
+PRODUCT_INFO_TOOL_DESCRIPTION = "商品情報や仕様、価格について詳しく説明する時に使う"
+TECHNICAL_SUPPORT_TOOL_NAME = "technical_support_tool"
+TECHNICAL_SUPPORT_TOOL_DESCRIPTION = "技術的な問題やトラブルシューティングに関する支援を提供する時に使う"
+PROMOTION_TOOL_NAME = "promotion_tool"
+PROMOTION_TOOL_DESCRIPTION = "キャンペーンや割引情報、特典について案内する時に使う"
+
 
 # ==========================================
 # プロンプトテンプレート

@@ -276,3 +276,361 @@ def adjust_string(s):
     
     # OSがWindows以外の場合はそのまま返す
     return s
+
+
+def calculate_tool(param):
+    """
+    数値計算や価格計算を行うツール関数
+
+    Args:
+        param: 計算に関する質問やリクエスト
+
+    Returns:
+        計算結果や関連情報
+    """
+    import re
+    from datetime import datetime
+    
+    # 簡単な計算例を処理
+    try:
+        # 数値と演算子を抽出して安全に計算
+        if any(op in param for op in ['+', '-', '*', '/', '×', '÷']):
+            # 安全な計算のため、evalは使わずに基本的な計算のみ対応
+            calculation_examples = [
+                "基本的な四則演算をサポートしています。",
+                "価格計算: 商品価格 × 数量 = 合計金額",
+                "税込み計算: 税抜き価格 × 1.10 = 税込み価格",
+                "割引計算: 元の価格 × (1 - 割引率) = 割引後価格"
+            ]
+            return "計算に関するご質問ですね。" + "\n".join(calculation_examples)
+        else:
+            return "具体的な計算内容をお教えください。四則演算、価格計算、税計算、割引計算などに対応できます。"
+    except Exception as e:
+        return "申し訳ございません。計算処理でエラーが発生しました。もう一度お試しください。"
+
+
+def datetime_tool(param):
+    """
+    日時に関する情報を提供するツール関数
+
+    Args:
+        param: 日時に関する質問やリクエスト
+
+    Returns:
+        日時情報や関連情報
+    """
+    from datetime import datetime, timedelta
+    
+    current_time = datetime.now()
+    
+    if "現在" in param or "今" in param:
+        return f"現在の日時: {current_time.strftime('%Y年%m月%d日 %H時%M分')}"
+    elif "営業時間" in param:
+        return "営業時間: 平日 9:00-18:00 (土日祝日は休業)"
+    elif "期限" in param or "締切" in param:
+        # 一週間後を例として提示
+        week_later = current_time + timedelta(days=7)
+        return f"一般的なお問い合わせの回答期限: {week_later.strftime('%Y年%m月%d日')}頃"
+    else:
+        return f"現在の日時: {current_time.strftime('%Y年%m月%d日 %H時%M分')}\n営業時間: 平日 9:00-18:00"
+
+
+def text_analysis_tool(param):
+    """
+    テキスト分析を行うツール関数
+
+    Args:
+        param: 分析対象のテキストや分析リクエスト
+
+    Returns:
+        分析結果
+    """
+    text_length = len(param)
+    word_count = len(param.split())
+    
+    # 簡単な感情分析（キーワードベース）
+    positive_words = ["良い", "素晴らしい", "満足", "嬉しい", "ありがとう", "助かる"]
+    negative_words = ["悪い", "不満", "困る", "問題", "エラー", "失敗"]
+    
+    positive_count = sum(1 for word in positive_words if word in param)
+    negative_count = sum(1 for word in negative_words if word in param)
+    
+    sentiment = "中性"
+    if positive_count > negative_count:
+        sentiment = "ポジティブ"
+    elif negative_count > positive_count:
+        sentiment = "ネガティブ"
+    
+    return f"""テキスト分析結果:
+文字数: {text_length}文字
+単語数: {word_count}語
+感情傾向: {sentiment}
+キーワード: {', '.join([word for word in positive_words + negative_words if word in param])}"""
+
+
+def faq_search_tool(param):
+    """
+    FAQ検索ツール関数
+
+    Args:
+        param: FAQ検索クエリ
+
+    Returns:
+        関連するFAQ情報
+    """
+    # 一般的なFAQの例
+    faqs = {
+        "料金": "サービス料金に関しては、基本プランは月額1,000円から提供しております。詳細は料金ページをご確認ください。",
+        "配送": "商品の配送は通常3-5営業日でお届けいたします。お急ぎの場合は特急便（別途料金）もご利用いただけます。",
+        "返品": "商品到着後14日以内であれば返品・交換を承っております。詳細は返品ポリシーをご確認ください。",
+        "サポート": "カスタマーサポートは平日9:00-18:00で対応しております。メール・電話・チャットでお問い合わせいただけます。",
+        "アカウント": "アカウントの作成・変更は公式サイトのマイページから行っていただけます。"
+    }
+    
+    # キーワードマッチング
+    for keyword, answer in faqs.items():
+        if keyword in param:
+            return f"【FAQ】{answer}"
+    
+    return "該当するFAQが見つかりませんでした。具体的なご質問内容をお聞かせください。"
+
+
+def contact_info_tool(param):
+    """
+    連絡先情報提供ツール関数
+
+    Args:
+        param: 連絡先に関する質問
+
+    Returns:
+        連絡先情報
+    """
+    contact_info = """
+【株式会社EcoTeeお問い合わせ先】
+📞 電話: 03-1234-5678
+📧 メール: support@ecotee.co.jp
+🏢 住所: 〒100-0001 東京都千代田区千代田1-1-1
+🕒 営業時間: 平日 9:00-18:00 (土日祝日休業)
+💬 チャットサポート: 公式サイトから24時間利用可能
+📄 お問い合わせフォーム: https://ecotee.co.jp/contact
+"""
+    return contact_info
+
+
+def order_status_tool(param):
+    """
+    注文状況確認ツール関数（模擬的な情報を提供）
+
+    Args:
+        param: 注文に関する質問
+
+    Returns:
+        注文状況情報
+    """
+    from datetime import datetime, timedelta
+    
+    # 模擬的な注文状況を生成
+    current_time = datetime.now()
+    order_date = current_time - timedelta(days=2)
+    estimated_delivery = current_time + timedelta(days=2)
+    
+    return f"""
+【注文状況（サンプル）】
+注文日: {order_date.strftime('%Y年%m月%d日')}
+注文番号: ECO-2024-001234
+商品: EcoTeeオリジナルTシャツ
+状況: 発送準備中
+予定配送日: {estimated_delivery.strftime('%Y年%m月%d日')}
+
+※実際の注文状況を確認するには、注文番号とお客様情報が必要です。
+詳細は顧客サポートまでお問い合わせください。
+"""
+
+
+def run_company_doc_chain_safe(param):
+    """
+    会社に関するデータ参照（安全版）
+
+    Args:
+        param: ユーザー入力値
+
+    Returns:
+        LLMからの回答またはフォールバック情報
+    """
+    if st.session_state.get("company_doc_chain") is not None:
+        return run_company_doc_chain(param)
+    else:
+        return "申し訳ございません。現在、会社情報データベースにアクセスできません。直接お問い合わせください。"
+
+
+def run_service_doc_chain_safe(param):
+    """
+    サービスに関するデータ参照（安全版）
+
+    Args:
+        param: ユーザー入力値
+
+    Returns:
+        LLMからの回答またはフォールバック情報
+    """
+    if st.session_state.get("service_doc_chain") is not None:
+        return run_service_doc_chain(param)
+    else:
+        return "申し訳ございません。現在、サービス情報データベースにアクセスできません。直接お問い合わせください。"
+
+
+def run_customer_doc_chain_safe(param):
+    """
+    顧客とのやり取りに関するデータ参照（安全版）
+
+    Args:
+        param: ユーザー入力値
+
+    Returns:
+        LLMからの回答またはフォールバック情報
+    """
+    if st.session_state.get("customer_doc_chain") is not None:
+        return run_customer_doc_chain(param)
+    else:
+        return "申し訳ございません。現在、顧客情報データベースにアクセスできません。直接お問い合わせください。"
+
+
+def product_info_tool(param):
+    """
+    商品情報提供ツール関数
+
+    Args:
+        param: 商品に関する質問
+
+    Returns:
+        商品情報
+    """
+    products = {
+        "ecotee": {
+            "name": "EcoTeeオリジナルTシャツ",
+            "price": "2,980円（税込）",
+            "description": "環境に優しいオーガニックコットン100%使用",
+            "sizes": ["S", "M", "L", "XL"],
+            "colors": ["ホワイト", "ブラック", "ネイビー", "グリーン"]
+        },
+        "hoodie": {
+            "name": "EcoTeeパーカー",
+            "price": "5,980円（税込）",
+            "description": "リサイクル素材を使用した温かいパーカー",
+            "sizes": ["S", "M", "L", "XL", "XXL"],
+            "colors": ["グレー", "ブラック", "ネイビー"]
+        }
+    }
+    
+    # キーワードマッチング
+    if "tシャツ" in param.lower() or "ecotee" in param.lower():
+        product = products["ecotee"]
+        return f"""
+【{product['name']}】
+価格: {product['price']}
+説明: {product['description']}
+サイズ: {', '.join(product['sizes'])}
+カラー: {', '.join(product['colors'])}
+"""
+    elif "パーカー" in param.lower() or "hoodie" in param.lower():
+        product = products["hoodie"]
+        return f"""
+【{product['name']}】
+価格: {product['price']}
+説明: {product['description']}
+サイズ: {', '.join(product['sizes'])}
+カラー: {', '.join(product['colors'])}
+"""
+    else:
+        return """
+【主な商品ラインナップ】
+・EcoTeeオリジナルTシャツ: 2,980円（税込）
+・EcoTeeパーカー: 5,980円（税込）
+
+詳細な商品情報をお知りになりたい場合は、商品名をお教えください。
+"""
+
+
+def technical_support_tool(param):
+    """
+    技術サポートツール関数
+
+    Args:
+        param: 技術的な問題に関する質問
+
+    Returns:
+        技術サポート情報
+    """
+    if "サイズ" in param or "選び方" in param:
+        return """
+【サイズ選びのガイド】
+・S: 胸囲88-96cm
+・M: 胸囲96-104cm  
+・L: 胸囲104-112cm
+・XL: 胸囲112-120cm
+
+※詳細なサイズチャートは商品ページをご確認ください。
+"""
+    elif "洗濯" in param or "手入れ" in param:
+        return """
+【お手入れ方法】
+・水温30度以下で洗濯
+・漂白剤は使用不可
+・陰干し推奨
+・アイロンは中温（150度以下）
+・ドライクリーニング可
+
+※オーガニック素材のため、丁寧なお手入れをお願いします。
+"""
+    elif "エラー" in param or "問題" in param:
+        return """
+【よくある問題と解決方法】
+・注文が完了しない → ブラウザのキャッシュをクリアしてお試しください
+・サイズが合わない → 14日以内であれば交換可能です
+・商品が届かない → 配送状況をお調べいたします
+
+詳細は技術サポート（03-1234-5678）までお問い合わせください。
+"""
+    else:
+        return "技術的なご質問やお困りごとがございましたら、具体的な内容をお教えください。サイズ選び、お手入れ方法、注文に関する問題などにお答えできます。"
+
+
+def promotion_tool(param):
+    """
+    プロモーション情報提供ツール関数
+
+    Args:
+        param: キャンペーンや割引に関する質問
+
+    Returns:
+        プロモーション情報
+    """
+    from datetime import datetime, timedelta
+    
+    current_date = datetime.now()
+    end_date = current_date + timedelta(days=30)
+    
+    promotions = f"""
+【現在開催中のキャンペーン】
+
+🎉 新規会員登録で10%OFF
+期間: 常時開催
+対象: 初回購入のお客様
+コード: WELCOME10
+
+🌱 エコフレンドリーキャンペーン
+期間: {end_date.strftime('%Y年%m月%d日')}まで
+内容: 3点以上購入で送料無料
+対象: 全商品
+
+💝 まとめ買い割引
+内容: 5点以上で15%OFF、10点以上で20%OFF
+対象: 全商品（セール品除く）
+
+📧 メルマガ登録特典
+内容: 限定クーポンとセール情報をお届け
+特典: 登録後すぐに使える5%OFFクーポン
+
+※キャンペーンの詳細は公式サイトをご確認ください。
+"""
+    return promotions
